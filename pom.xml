@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <properties>
+        <nifi.version>1.12.1</nifi.version>
+    </properties>
+
+    <parent>
+        <groupId>org.apache.nifi</groupId>
+        <artifactId>nifi-nar-bundles</artifactId>
+        <version>1.12.1</version>
+    </parent>
+
+    <groupId>pl.touk</groupId>
+    <artifactId>nifi-extensions</artifactId>
+    <version>0.1</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>nifi-processors</module>
+        <module>nifi-processors-nar</module>
+        <module>nifi-services</module>
+        <module>nifi-services-nar</module>
+        <module>nifi-services-api</module>
+        <module>nifi-services-api-nar</module>
+    </modules>
+
+</project>
