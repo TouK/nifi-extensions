@@ -1,0 +1,3 @@
+pl.touk.nifi.services.IgniteLookupService
+pl.touk.nifi.services.IgniteDBCPConnectionPool
+pl.touk.nifi.services.IgniteDistributedMapCacheClient
