@@ -50,8 +50,12 @@ public class IgniteDistributedMapCacheClientIT {
     }
 
     @After
-    public void after() {
-        igniteServer.close();
+    public void after() throws Exception {
+        try {
+            service.onDisabled();
+        } finally {
+            igniteServer.close();
+        }
     }
 
     @Test
