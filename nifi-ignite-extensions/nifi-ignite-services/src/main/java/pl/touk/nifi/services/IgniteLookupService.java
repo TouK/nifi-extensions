@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class IgniteLookupService extends AbstractIgniteCacheService implements RecordLookupService {
+public class IgniteLookupService extends AbstractIgniteCache<String, BinaryObject> implements RecordLookupService {
 
     public static final String KEY_KEY = "key";
 
@@ -25,7 +25,7 @@ public class IgniteLookupService extends AbstractIgniteCacheService implements R
     public Optional<Record> lookup(Map<String, Object> coordinates) throws LookupFailureException {
         String key = (String)coordinates.get(KEY_KEY);
         List<RecordField> recordFields = new ArrayList<>();
-        BinaryObject binaryObject = getIgniteCache().get(key);
+        BinaryObject binaryObject = getCache().get(key);
         if (binaryObject == null) {
             return Optional.empty();
         }

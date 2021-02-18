@@ -1,6 +1,7 @@
 package pl.touk.nifi.services;
 
 import org.apache.ignite.Ignite;
+import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.ClientConnectorConfiguration;
 import org.apache.nifi.distributed.cache.client.Deserializer;
 import org.apache.nifi.distributed.cache.client.Serializer;
@@ -27,18 +28,16 @@ public class IgniteDistributedMapCacheClientIT {
     private final Serializer<String> stringSerializer = new StringSerializer();
     private final Deserializer<String> stringDeserializer = new StringDeserializer();
 
-    private int ignitePort;
-    private int clientConnectorPort;
     private Ignite igniteServer;
     private IgniteDistributedMapCacheClient service;
 
     @Before
     public void before() throws IOException, InitializationException {
-        ignitePort = PortFinder.getAvailablePort();
-        clientConnectorPort = PortFinder.getAvailablePort();
-        ClientConnectorConfiguration connectorConfiguration = new ClientConnectorConfiguration();
-        connectorConfiguration.setPort(clientConnectorPort);
-        igniteServer = IgniteTestUtil.startServer(ignitePort, connectorConfiguration);
+        final int ignitePort = PortFinder.getAvailablePort();
+        final int clientConnectorPort = PortFinder.getAvailablePort();
+        ClientConnectorConfiguration clientConfiguration = new ClientConnectorConfiguration();
+        clientConfiguration.setPort(clientConnectorPort);
+        igniteServer = IgniteTestUtil.startServer(ignitePort, clientConfiguration);
 
         TestRunner runner = TestRunners.newTestRunner(TestDistributedMapCacheClientProcessor.class);
         service = new IgniteDistributedMapCacheClient();
@@ -51,11 +50,8 @@ public class IgniteDistributedMapCacheClientIT {
 
     @After
     public void after() throws Exception {
-        try {
-            service.onDisabled();
-        } finally {
-            igniteServer.close();
-        }
+        service.onDisabled();
+        igniteServer.close();
     }
 
     @Test

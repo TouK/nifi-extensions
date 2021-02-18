@@ -2,8 +2,7 @@ package pl.touk.nifi.utils;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
-import org.apache.ignite.configuration.ClientConnectorConfiguration;
-import org.apache.ignite.configuration.IgniteConfiguration;
+import org.apache.ignite.configuration.*;
 import org.apache.ignite.spi.discovery.DiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
@@ -17,6 +16,7 @@ public class IgniteTestUtil {
     }
 
     public static Ignite startServer(int port, ClientConnectorConfiguration clientConnectorConfig) {
+        clientConnectorConfig.setPortRange(0);
         IgniteConfiguration serverConfig = getServerConfig(port)
                 .setClientConnectorConfiguration(clientConnectorConfig);
 
@@ -39,7 +39,7 @@ public class IgniteTestUtil {
     }
 
     private static DiscoverySpi getDiscoverSpi(int port) {
-        return new TcpDiscoverySpi()
+        return new TcpDiscoverySpi().setLocalPortRange(0).setReconnectCount(1)
                 .setIpFinder(
                         new TcpDiscoveryMulticastIpFinder()
                                 .setAddresses(Collections.singleton("127.0.0.1:" + port))
