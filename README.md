@@ -1,4 +1,4 @@
-![Java CI with Maven](https://github.com/nadberezny/nifi-extensions/workflows/Java%20CI%20with%20Maven/badge.svg?branch=master)
+[![CI](https://github.com/nadberezny/nifi-extensions/actions/workflows/maven.yml/badge.svg)](https://github.com/nadberezny/nifi-extensions/actions/workflows/maven.yml)
 # Apache NiFi Ignite extensions
 
 1. DistributedMapCacheClient for Ignite thin client.
