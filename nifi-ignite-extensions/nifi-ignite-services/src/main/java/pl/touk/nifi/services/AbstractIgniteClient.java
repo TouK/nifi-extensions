@@ -60,7 +60,7 @@ public abstract class AbstractIgniteClient extends AbstractControllerService {
             getLogger().info("Ignite already initialized");
             return;
         }
-        final String[] hostAddresses = context.getProperty(SERVER_ADDRESSES).getValue().split(",");
+        String[] hostAddresses = context.getProperty(SERVER_ADDRESSES).getValue().split(",");
         synchronized (Ignition.class) {
             ClientConfiguration cfg = new ClientConfiguration().setAddresses(hostAddresses);
             getLogger().info("Initializing Ignite thin client for " + context.getName());

@@ -57,22 +57,29 @@ public class IgniteLookupServiceIT {
 
     @Test
     public void testServiceLookup() throws LookupFailureException {
-        final String recordName = "my-record";
-        final MyRecord myRecord = new MyRecord(recordName);
-        igniteClient.cache(CACHE_NAME).put(recordName, myRecord);
-        final IgniteCache<String, BinaryObject> binaryCache =
-                igniteClient.cache(CACHE_NAME).withKeepBinary();
-        final BinaryObject binaryObject = binaryCache.get(recordName);
-        Assert.assertEquals(recordName, binaryObject.field("name"));
+        MyRecord myRecord = new MyRecord();
+        igniteClient.cache(CACHE_NAME).put(myRecord.name, myRecord);
+        IgniteCache<String, BinaryObject> binaryCache = igniteClient
+                .cache(CACHE_NAME).withKeepBinary();
+        BinaryObject binaryObject = binaryCache.get(myRecord.name);
+        Assert.assertEquals(myRecord.name, binaryObject.field("name"));
 
-        final Map<String, Object> coordinates = new HashMap<>();
-        coordinates.put("key", recordName);
-        final Optional<Record> optionalRecord = service.lookup(coordinates);
-        Assert.assertEquals(recordName, optionalRecord.get().toMap().get("name"));
+        Map<String, Object> coordinates = new HashMap<>();
+        coordinates.put("key", myRecord.name);
+        Optional<Record> optionalRecord = service.lookup(coordinates);
+        Assert.assertEquals(myRecord.name, optionalRecord.get().toMap().get("name"));
+        Assert.assertEquals(myRecord.age, optionalRecord.get().toMap().get("age"));
+        Assert.assertEquals(myRecord.active, optionalRecord.get().toMap().get("active"));
     }
 
     private class MyRecord {
         public String name;
-        MyRecord(String name) { this.name = name; }
+        private int age;
+        private boolean active;
+        MyRecord() {
+            this.name = "my-record";
+            this.age = 42;
+            this.active = true;
+        }
     }
 }

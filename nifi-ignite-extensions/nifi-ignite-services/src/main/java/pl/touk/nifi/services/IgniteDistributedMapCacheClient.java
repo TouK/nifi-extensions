@@ -15,13 +15,13 @@ public class IgniteDistributedMapCacheClient extends AbstractIgniteCache<byte[],
 
     @Override
     public <K, V> boolean putIfAbsent(K key, V value, Serializer<K> keySerializer, Serializer<V> valueSerializer) throws IOException {
-        final Tuple<byte[],byte[]> kv = serialize(key, value, keySerializer, valueSerializer);
+        Tuple<byte[],byte[]> kv = serialize(key, value, keySerializer, valueSerializer);
         return getCache().putIfAbsent(kv.getKey(), kv.getValue());
     }
 
     @Override
     public <K, V> V getAndPutIfAbsent(K key, V value, Serializer<K> keySerializer, Serializer<V> valueSerializer, Deserializer<V> valueDeserializer) throws IOException {
-        final Tuple<byte[],byte[]> kv = serialize(key, value, keySerializer, valueSerializer);
+        Tuple<byte[],byte[]> kv = serialize(key, value, keySerializer, valueSerializer);
         if (getCache().putIfAbsent(kv.getKey(), kv.getValue())) {
             return value;
         } else {
@@ -31,19 +31,19 @@ public class IgniteDistributedMapCacheClient extends AbstractIgniteCache<byte[],
 
     @Override
     public <K> boolean containsKey(K key, Serializer<K> keySerializer) throws IOException {
-        final byte[] keyBytes = serialize(key, keySerializer);
+        byte[] keyBytes = serialize(key, keySerializer);
         return getCache().containsKey(keyBytes);
     }
 
     @Override
     public <K, V> void put(K key, V value, Serializer<K> keySerializer, Serializer<V> valueSerializer) throws IOException {
-        final Tuple<byte[],byte[]> kv = serialize(key, value, keySerializer, valueSerializer);
+        Tuple<byte[],byte[]> kv = serialize(key, value, keySerializer, valueSerializer);
         getCache().put(kv.getKey(), kv.getValue());
     }
 
     @Override
     public <K, V> V get(K key, Serializer<K> keySerializer, Deserializer<V> valueDeserializer) throws IOException {
-        final byte[] keyBytes = serialize(key, keySerializer);
+        byte[] keyBytes = serialize(key, keySerializer);
         byte[] valueBytes = getCache().get(keyBytes);
         return valueBytes == null ? null : valueDeserializer.deserialize(valueBytes);
     }
@@ -53,7 +53,7 @@ public class IgniteDistributedMapCacheClient extends AbstractIgniteCache<byte[],
 
     @Override
     public <K> boolean remove(K key, Serializer<K> keySerializer) throws IOException {
-        final byte[] keyBytes = serialize(key, keySerializer);
+        byte[] keyBytes = serialize(key, keySerializer);
         return getCache().remove(keyBytes);
     }
 
@@ -63,17 +63,17 @@ public class IgniteDistributedMapCacheClient extends AbstractIgniteCache<byte[],
     }
 
     private <K, V> Tuple<byte[],byte[]> serialize(final K key, final V value, final Serializer<K> keySerializer, final Serializer<V> valueSerializer) throws IOException {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         keySerializer.serialize(key, out);
-        final byte[] k = out.toByteArray();
+        byte[] k = out.toByteArray();
         out.reset();
         valueSerializer.serialize(value, out);
-        final byte[] v = out.toByteArray();
+        byte[] v = out.toByteArray();
         return new Tuple<>(k, v);
     }
 
     private <K> byte[] serialize(final K key, final Serializer<K> keySerializer) throws IOException {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         keySerializer.serialize(key, out);
         return out.toByteArray();
     }
