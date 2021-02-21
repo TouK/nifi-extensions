@@ -44,6 +44,7 @@ public class IgniteLookupServiceIT {
         runner.addControllerService("ignite-lookup-service", service);
         runner.setProperty(service, IgniteDistributedMapCacheClient.SERVER_ADDRESSES, "localhost:" + clientConnectorPort);
         runner.setProperty(service, IgniteLookupService.CACHE_NAME, CACHE_NAME);
+        runner.setProperty(service, IgniteLookupService.FIELDS_TO_RETURN, "name,age");
         runner.enableControllerService(service);
         runner.assertValid(service);
     }
@@ -69,7 +70,7 @@ public class IgniteLookupServiceIT {
         Optional<Record> optionalRecord = service.lookup(coordinates);
         Assert.assertEquals(myRecord.name, optionalRecord.get().toMap().get("name"));
         Assert.assertEquals(myRecord.age, optionalRecord.get().toMap().get("age"));
-        Assert.assertEquals(myRecord.active, optionalRecord.get().toMap().get("active"));
+        Assert.assertNull(optionalRecord.get().toMap().get("active"));
     }
 
     private class MyRecord {
