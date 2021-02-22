@@ -2,7 +2,6 @@ package pl.touk.nifi.services;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
-import org.apache.ignite.Ignition;
 import org.apache.ignite.binary.BinaryObject;
 import org.apache.ignite.configuration.ClientConnectorConfiguration;
 import org.apache.nifi.lookup.LookupFailureException;
@@ -20,7 +19,7 @@ import pl.touk.nifi.utils.IgniteTestUtil;
 import java.io.IOException;
 import java.util.*;
 
-public class IgniteLookupServiceIT {
+public class IgniteRecordLookupServiceIT {
 
     private final static String CACHE_NAME = "my-cache";
 
@@ -28,7 +27,7 @@ public class IgniteLookupServiceIT {
     private Ignite igniteClient;
 
     private TestRunner runner;
-    private IgniteLookupService service;
+    private IgniteRecordLookupService service;
 
     @Before
     public void before() throws IOException, InitializationException {
@@ -40,11 +39,11 @@ public class IgniteLookupServiceIT {
         igniteClient.createCache(CACHE_NAME);
 
         runner = TestRunners.newTestRunner(TestLookupProcessor.class);
-        service = new IgniteLookupService();
+        service = new IgniteRecordLookupService();
         runner.addControllerService("ignite-lookup-service", service);
         runner.setProperty(service, IgniteDistributedMapCacheClient.SERVER_ADDRESSES, "localhost:" + clientConnectorPort);
-        runner.setProperty(service, IgniteLookupService.CACHE_NAME, CACHE_NAME);
-        runner.setProperty(service, IgniteLookupService.FIELDS_TO_RETURN, "name,age");
+        runner.setProperty(service, IgniteRecordLookupService.CACHE_NAME, CACHE_NAME);
+        runner.setProperty(service, IgniteRecordLookupService.FIELDS_TO_RETURN, "name,age");
         runner.enableControllerService(service);
         runner.assertValid(service);
     }

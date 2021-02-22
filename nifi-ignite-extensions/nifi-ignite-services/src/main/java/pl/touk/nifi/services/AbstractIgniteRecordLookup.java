@@ -15,20 +15,14 @@ import org.apache.nifi.processor.util.StandardValidators;
 import org.apache.nifi.reporting.InitializationException;
 import org.apache.nifi.serialization.SimpleRecordSchema;
 import org.apache.nifi.serialization.record.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/*
-    TODO:
-    1. handle all ignite types
-    2. more test cases
-*/
-public class IgniteLookupService extends AbstractIgniteCache<String, BinaryObject> implements RecordLookupService {
+public abstract class AbstractIgniteRecordLookup extends AbstractIgniteCache<String, BinaryObject> implements RecordLookupService {
 
-    public static final String KEY_KEY = "key";
     private static final String IGNITE_THIS_FIELD_NAME = "this$0";
-    private static final Set<String> REQUIRED_KEYS = Collections.unmodifiableSet(Stream.of(KEY_KEY).collect(Collectors.toSet()));
 
     protected static final PropertyDescriptor FIELDS_TO_RETURN = new PropertyDescriptor.Builder()
             .name("cache-field-names")
@@ -62,11 +56,6 @@ public class IgniteLookupService extends AbstractIgniteCache<String, BinaryObjec
     }
 
     @Override
-    public Set<String> getRequiredKeys() {
-        return REQUIRED_KEYS;
-    }
-
-    @Override
     public Optional<Record> lookup(Map<String, Object> coordinates, Map<String, String> flowFileAttrs) throws LookupFailureException {
         String currentUUID = flowFileAttrs.get(CoreAttributes.UUID.name());
         if (lastUUID == null) {
@@ -78,23 +67,10 @@ public class IgniteLookupService extends AbstractIgniteCache<String, BinaryObjec
         return lookup(coordinates);
     }
 
-    @Override
-    public Optional<Record> lookup(Map<String, Object> coordinates) throws LookupFailureException, RuntimeException {
-        String key = (String)coordinates.get(KEY_KEY);
-
-        BinaryObject binaryObject = getCache().get(key);
-        if (binaryObject == null) {
-            return Optional.empty();
-        }
-
+    protected Record buildRecord(BinaryObject binaryObject) {
         RecordSchema recordSchema = recordSchemaCache.orElse(calculateRecordSchema(binaryObject));
-        Record record = buildRecord(recordSchema.getFieldNames(), recordSchema, binaryObject);
-        return Optional.of(record);
-    }
-
-    private Record buildRecord(List<String> fieldNames, RecordSchema recordSchema, BinaryObject binaryObject) {
         Map<String, Object> record = new HashMap<>();
-        fieldNames.forEach(fieldName ->
+        recordSchema.getFieldNames().forEach(fieldName ->
                 record.put(fieldName, binaryObject.field(fieldName))
         );
         return new MapRecord(recordSchema, record);
@@ -109,12 +85,12 @@ public class IgniteLookupService extends AbstractIgniteCache<String, BinaryObjec
                 .collect(Collectors.toList());
         List<RecordField> recordFields = new ArrayList<>();
         fieldNames.forEach(fieldName -> {
-                try {
-                    recordFields.add(new RecordField(fieldName, getRecordType(igniteType, fieldName)));
-                } catch (LookupFailureException e) {
-                    throw new RuntimeException(e.getMessage());
+                    try {
+                        recordFields.add(new RecordField(fieldName, getRecordType(igniteType, fieldName)));
+                    } catch (LookupFailureException e) {
+                        throw new RuntimeException(e.getMessage());
+                    }
                 }
-            }
         );
         RecordSchema schema = new SimpleRecordSchema(recordFields);
         recordSchemaCache = Optional.of(schema);
@@ -124,7 +100,7 @@ public class IgniteLookupService extends AbstractIgniteCache<String, BinaryObjec
     private DataType getRecordType(BinaryType igniteType, String fieldName) throws LookupFailureException {
         String igniteTypeName = igniteType.fieldTypeName(fieldName);
         if (igniteTypeName.equals(BinaryUtils.fieldTypeName(GridBinaryMarshaller.STRING))) {
-           return RecordFieldType.STRING.getDataType();
+            return RecordFieldType.STRING.getDataType();
         } else if (igniteTypeName.equals(BinaryUtils.fieldTypeName(GridBinaryMarshaller.LONG))) {
             return RecordFieldType.LONG.getDataType();
         } else if (igniteTypeName.equals(BinaryUtils.fieldTypeName(GridBinaryMarshaller.INT))) {
