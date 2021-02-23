@@ -32,6 +32,15 @@ public class IgniteRecordSqlLookupService extends AbstractIgniteRecordLookup<Obj
             .expressionLanguageSupported(ExpressionLanguageScope.FLOWFILE_ATTRIBUTES)
             .build();
 
+    protected static final PropertyDescriptor TABLE_NAME = new PropertyDescriptor.Builder()
+            .name("table-name")
+            .displayName("Table name")
+            .description("Provide the table name if it's name differs from cache name")
+            .required(false)
+            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+            .expressionLanguageSupported(ExpressionLanguageScope.FLOWFILE_ATTRIBUTES)
+            .build();
+
     protected static final PropertyDescriptor WHERE_CLAUSE = new PropertyDescriptor.Builder()
             .name("where-clause")
             .displayName("Where")
@@ -42,6 +51,7 @@ public class IgniteRecordSqlLookupService extends AbstractIgniteRecordLookup<Obj
             .build();
 
     private volatile String keyColumnName;
+    private volatile Optional<String> tableNameOption = Optional.empty();
     private volatile String whereClauseStr;
 
     @Override
@@ -62,6 +72,11 @@ public class IgniteRecordSqlLookupService extends AbstractIgniteRecordLookup<Obj
         super.onEnabled(context);
         keyColumnName = context.getProperty(KEY_COLUMN)
                 .evaluateAttributeExpressions().getValue().toUpperCase();
+        String tableNameStr = context.getProperty(TABLE_NAME)
+                .evaluateAttributeExpressions().getValue();
+        if (tableNameStr != null) {
+           tableNameOption = Optional.of(tableNameStr.toUpperCase());
+        }
         whereClauseStr = context.getProperty(WHERE_CLAUSE)
                 .evaluateAttributeExpressions().getValue();
     }
@@ -75,8 +90,9 @@ public class IgniteRecordSqlLookupService extends AbstractIgniteRecordLookup<Obj
     }
 
     private SqlFieldsQuery getQuery(Map<String, Object> coordinates) {
+        String tableName = tableNameOption.orElse(cacheName);
         return new SqlFieldsQuery(
-                "SELECT " + keyColumnName + " FROM " + cacheName + " WHERE " + whereClauseStr + ";"
+                "SELECT " + keyColumnName + " FROM " + tableName + " WHERE " + whereClauseStr + ";"
         ).setArgs(getSortedArgs(coordinates));
     }
 
