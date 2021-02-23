@@ -13,7 +13,7 @@ import java.util.stream.Stream;
     1. handle all ignite types
     2. more test cases
 */
-public class IgniteRecordLookupService extends AbstractIgniteRecordLookup implements RecordLookupService {
+public class IgniteRecordLookupService extends AbstractIgniteRecordLookup<Object> implements RecordLookupService {
 
     public static final String KEY_KEY = "key";
     private static final Set<String> REQUIRED_KEYS = Collections.unmodifiableSet(Stream.of(KEY_KEY).collect(Collectors.toSet()));

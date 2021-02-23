@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractIgniteRecordLookup extends AbstractIgniteCache<String, BinaryObject> implements RecordLookupService {
+public abstract class AbstractIgniteRecordLookup<Key> extends AbstractIgniteCache<Key, BinaryObject> implements RecordLookupService {
 
     private static final String IGNITE_THIS_FIELD_NAME = "this$0";
 
