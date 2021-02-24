@@ -3,6 +3,7 @@ package pl.touk.nifi.services;
 import org.apache.ignite.binary.BinaryObject;
 import org.apache.ignite.cache.query.FieldsQueryCursor;
 import org.apache.ignite.cache.query.SqlFieldsQuery;
+import org.apache.ignite.internal.jdbc.JdbcResultSetMetadata;
 import org.apache.nifi.annotation.lifecycle.OnEnabled;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.controller.ConfigurationContext;

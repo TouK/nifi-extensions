@@ -16,6 +16,27 @@
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-dbcp-service</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.nifi</groupId>-->
+<!--            <artifactId>nifi-lookup-services</artifactId>-->
+<!--            <version>1.12.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.nifi</groupId>-->
+<!--            <artifactId>nifi-properties</artifactId>-->
+<!--            <version>1.12.1</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.nifi</groupId>-->
+<!--            <artifactId>nifi-utils</artifactId>-->
+<!--            <version>1.12.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.nifi</groupId>-->
+<!--            <artifactId>nifi-database-utils</artifactId>-->
+<!--            <version>1.12.1</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>pl.touk</groupId>
             <artifactId>nifi-ignite-services-api</artifactId>
