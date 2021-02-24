@@ -1,5 +1,2 @@
-pl.touk.nifi.services.IgniteRecordLookupService
 pl.touk.nifi.services.IgniteRecordSqlLookupService
-pl.touk.nifi.services.IgniteDBCPConnectionPool
 pl.touk.nifi.services.IgniteDistributedMapCacheClient
-pl.touk.nifi.services.DatabaseRecordLookupService
