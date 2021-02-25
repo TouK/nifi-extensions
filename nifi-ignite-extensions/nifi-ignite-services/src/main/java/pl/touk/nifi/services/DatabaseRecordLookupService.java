@@ -26,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Tags({"lookup", "cache", "enrich", "join", "rdbms", "database", "reloadable", "key", "value", "record"})
-@CapabilityDescription("A relational-database-based lookup service. When the lookup key is found in the database, "
+@Tags({"lookup", "cache", "enrich", "join", "rdbms", "database", "query", "sql", "reloadable", "record"})
+@CapabilityDescription("A relational-database-based lookup service. When the lookup record is found in the database, "
         + "the specified columns (or all if Lookup Value Columns are not specified) are returned as a Record. Only one row "
         + "will be returned for each lookup, duplicate database entries are ignored.")
 public class DatabaseRecordLookupService extends AbstractDatabaseLookupService implements RecordLookupService {
