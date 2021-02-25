@@ -13,6 +13,7 @@ services:
       - ./nifi/user:/opt/nifi/nifi-current/user
       - ./ignite:/opt/nifi/nifi-current/ignite
       - ~/.m2/repository/org/apache/ignite/ignite-core/2.9.1/ignite-core-2.9.1.jar:/opt/nifi/nifi-current/user_lib/ignite-core-2.9.1.jar
+      - ~/.m2/repository/org/apache/ignite/ignite-spring/2.9.1/ignite-spring-2.9.1.jar:/opt/nifi/nifi-current/user_lib/ignite-spring-2.9.1.jar
     depends_on:
       - ignite
 

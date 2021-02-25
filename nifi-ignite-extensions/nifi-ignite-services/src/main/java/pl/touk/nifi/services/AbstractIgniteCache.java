@@ -22,7 +22,7 @@ public abstract class AbstractIgniteCache<K, V> extends AbstractIgniteClient {
             .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
             .build();
 
-    private transient String cacheName;
+    protected volatile String cacheName;
 
     private volatile ClientCache<K, V> cache;
 
