@@ -29,11 +29,28 @@ public abstract class AbstractIgniteClient extends AbstractControllerService {
             .required(true)
             .build();
 
+    public static final PropertyDescriptor USERNAME = new PropertyDescriptor.Builder()
+            .name("ignite-username")
+            .displayName("Ignite user")
+            .addValidator(StandardValidators.createListValidator(true, true, StandardValidators.NON_EMPTY_VALIDATOR))
+            .expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
+            .required(false)
+            .build();
+
+    public static final PropertyDescriptor PASSWORD = new PropertyDescriptor.Builder()
+            .name("ignite-password")
+            .displayName("Ignite password")
+            .addValidator(StandardValidators.createListValidator(true, true, StandardValidators.NON_EMPTY_VALIDATOR))
+            .expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
+            .required(false)
+            .sensitive(true)
+            .build();
+
     private transient IgniteClient igniteClient;
     
     @Override
     protected List<PropertyDescriptor> getSupportedPropertyDescriptors() {
-        return Stream.of(SERVER_ADDRESSES).collect(Collectors.toList());
+        return Stream.of(SERVER_ADDRESSES, USERNAME, PASSWORD).collect(Collectors.toList());
     }
 
     @Override
@@ -61,8 +78,17 @@ public abstract class AbstractIgniteClient extends AbstractControllerService {
             return;
         }
         String[] hostAddresses = context.getProperty(SERVER_ADDRESSES).getValue().split(",");
+        String username = context.getProperty(USERNAME).getValue();
+        String password = context.getProperty(USERNAME).getValue();
         synchronized (Ignition.class) {
             ClientConfiguration cfg = new ClientConfiguration().setAddresses(hostAddresses);
+            if (username != null) {
+                cfg.setUserName(username);
+            }
+            if (password != null) {
+                cfg.setUserPassword(password);
+            }
+
             getLogger().info("Initializing Ignite thin client for " + context.getName());
             igniteClient = Ignition.startClient(cfg);
         }
