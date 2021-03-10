@@ -13,6 +13,7 @@
 
     <properties>
         <ignite.version>2.9.1</ignite.version>
+        <h2.version>1.4.200</h2.version>
     </properties>
 
     <modules>
@@ -28,6 +29,11 @@
                 <groupId>org.apache.ignite</groupId>
                 <artifactId>ignite-core</artifactId>
                 <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
