@@ -157,9 +157,8 @@ public class DatabaseRecordLookupService extends AbstractDatabaseLookupService i
 
         Record recordFromCache = cache.get(query, k -> null);
         if (recordFromCache == null) {
-            Connection conn = dbcpService.getConnection(context);
-            try {
-                PreparedStatement statement = query.toStatement(conn);
+            try(Connection conn = dbcpService.getConnection(context);
+                PreparedStatement statement = query.toStatement(conn)) {
                 ResultSet resultSet = statement.executeQuery();
                 ResultSetRecordSet resultSetRecordSet = new ResultSetRecordSet(resultSet, null);
                 Record record = resultSetRecordSet.next();
