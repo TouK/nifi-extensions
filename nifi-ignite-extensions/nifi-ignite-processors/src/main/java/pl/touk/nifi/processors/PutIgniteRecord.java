@@ -101,7 +101,7 @@ public class PutIgniteRecord extends AbstractGenericIgniteCacheProcessor<BinaryO
                     RECORD_READER, KEY_FIELD_NAMES,
                     DATA_STREAMER_PER_NODE_PARALLEL_OPERATIONS,
                     DATA_STREAMER_PER_NODE_BUFFER_SIZE,
-                    DATA_STREAMER_MAX_RETRIES_ON_FAILURE,
+                    DATA_STREAMER_AUTO_FLUSH_FREQUENCY,
                     DATA_STREAMER_ALLOW_OVERRIDE,
                     DATA_STREAMER_MAX_RETRIES_ON_FAILURE);
 
@@ -152,7 +152,7 @@ public class PutIgniteRecord extends AbstractGenericIgniteCacheProcessor<BinaryO
         try {
             int perNodeParallelOperations = context.getProperty(DATA_STREAMER_PER_NODE_PARALLEL_OPERATIONS).asInteger();
             int perNodeBufferSize = context.getProperty(DATA_STREAMER_PER_NODE_BUFFER_SIZE).asInteger();
-            int autoFlushFrequency = context.getProperty(DATA_STREAMER_MAX_RETRIES_ON_FAILURE).asInteger();
+            int autoFlushFrequency = context.getProperty(DATA_STREAMER_AUTO_FLUSH_FREQUENCY).asInteger();
             boolean allowOverride = context.getProperty(DATA_STREAMER_ALLOW_OVERRIDE).asBoolean();
             maxRetries = context.getProperty(DATA_STREAMER_MAX_RETRIES_ON_FAILURE).asInteger();
 
